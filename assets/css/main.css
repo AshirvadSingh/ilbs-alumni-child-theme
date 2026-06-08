@@ -2780,3 +2780,49 @@ textarea:focus {
     width: fit-content;
   }
 }
+
+/* ── Final spacing pass for archive/filter/table sections ── */
+.ilbs-members-archive .filter-panel {
+  padding: clamp(18px, 2.4vw, 28px);
+  border-radius: 28px;
+}
+
+.ilbs-members-archive .row.g-3 {
+  --bs-gutter-x: 1rem;
+  --bs-gutter-y: 1rem;
+  align-items: center;
+}
+
+.ilbs-members-archive .form-control,
+.ilbs-members-archive .form-select,
+.ilbs-members-archive .btn {
+  min-height: 54px;
+}
+
+#memberGrid {
+  margin-top: 0;
+}
+
+#governance {
+  overflow: hidden;
+}
+
+#governance .wp-table {
+  min-width: min(680px, 100%);
+}
+
+#governance .col-lg-4,
+#governance .col-lg-8 {
+  align-self: center;
+}
+
+@media (max-width: 991px) {
+  #governance .wp-table {
+    min-width: 640px;
+  }
+
+  #governance .col-lg-8 {
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+}

@@ -183,12 +183,15 @@ $hero_quick_links = [
 	<!-- 3B. INSTITUTIONAL TIMELINE -->
 	<section class="ilbs-ref-section ilbs-ref-timeline-section" id="timeline" data-reveal>
 		<div class="container">
-			<div class="ilbs-ref-section-head ilbs-ref-section-head--center">
-				<span class="ilbs-eyebrow"><?php esc_html_e( 'Journey', 'ilbs-alumni' ); ?></span>
-				<h2 class="ilbs-ref-title"><?php esc_html_e( 'ILBS Alumni Growth Timeline', 'ilbs-alumni' ); ?></h2>
-				<p class="ilbs-ref-section-lead"><?php esc_html_e( 'A curated view of institutional milestones, alumni recognition and the portal experience evolving for a global medical research community.', 'ilbs-alumni' ); ?></p>
-			</div>
-			<div class="ilbs-ref-timeline" data-reveal-stagger>
+			<div class="ilbs-ref-timeline-panel">
+				<div class="ilbs-ref-timeline-panel__intro">
+					<div>
+						<span class="ilbs-eyebrow"><?php esc_html_e( 'Journey', 'ilbs-alumni' ); ?></span>
+						<h2 class="ilbs-ref-title"><?php esc_html_e( 'ILBS Alumni Growth Timeline', 'ilbs-alumni' ); ?></h2>
+					</div>
+					<p class="ilbs-ref-section-lead"><?php esc_html_e( 'A premium institutional timeline that keeps the alumni story structured, readable and balanced across every screen size.', 'ilbs-alumni' ); ?></p>
+				</div>
+
 				<?php
 				$timeline_items = function_exists( 'have_rows' ) && have_rows( 'home_timeline' ) ? [] : [
 					[ 'year' => __( '2009', 'ilbs-alumni' ), 'title' => __( 'Institutional Foundation', 'ilbs-alumni' ), 'text' => __( 'ILBS expands as a dedicated centre of excellence for liver and biliary sciences education, clinical care and research.', 'ilbs-alumni' ), 'icon' => 'bi-building' ],
@@ -208,16 +211,36 @@ $hero_quick_links = [
 						];
 					}
 				}
+				?>
 
-				foreach ( $timeline_items as $timeline_item ) :
-					?>
-					<article class="ilbs-ref-timeline-card" data-reveal-item>
-						<div class="ilbs-ref-timeline-card__marker"><i class="bi <?php echo esc_attr( $timeline_item['icon'] ); ?>" aria-hidden="true"></i></div>
-						<span class="ilbs-ref-timeline-card__year"><?php echo esc_html( $timeline_item['year'] ); ?></span>
-						<h3><?php echo esc_html( $timeline_item['title'] ); ?></h3>
-						<p><?php echo esc_html( $timeline_item['text'] ); ?></p>
-					</article>
-				<?php endforeach; ?>
+				<div class="ilbs-ref-timeline-summary" aria-label="<?php esc_attr_e( 'Timeline highlights', 'ilbs-alumni' ); ?>">
+					<div>
+						<strong><?php echo esc_html( count( $timeline_items ) ); ?></strong>
+						<span><?php esc_html_e( 'Milestones', 'ilbs-alumni' ); ?></span>
+					</div>
+					<div>
+						<strong><?php esc_html_e( '360°', 'ilbs-alumni' ); ?></strong>
+						<span><?php esc_html_e( 'Alumni Journey', 'ilbs-alumni' ); ?></span>
+					</div>
+					<div>
+						<strong><?php esc_html_e( 'Global', 'ilbs-alumni' ); ?></strong>
+						<span><?php esc_html_e( 'Clinical Network', 'ilbs-alumni' ); ?></span>
+					</div>
+				</div>
+
+				<div class="ilbs-ref-timeline" data-reveal-stagger>
+					<?php foreach ( $timeline_items as $index => $timeline_item ) : ?>
+						<article class="ilbs-ref-timeline-card" data-reveal-item>
+							<div class="ilbs-ref-timeline-card__step"><?php echo esc_html( str_pad( (string) ( $index + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></div>
+							<div class="ilbs-ref-timeline-card__marker"><i class="bi <?php echo esc_attr( $timeline_item['icon'] ); ?>" aria-hidden="true"></i></div>
+							<div class="ilbs-ref-timeline-card__content">
+								<span class="ilbs-ref-timeline-card__year"><?php echo esc_html( $timeline_item['year'] ); ?></span>
+								<h3><?php echo esc_html( $timeline_item['title'] ); ?></h3>
+								<p><?php echo esc_html( $timeline_item['text'] ); ?></p>
+							</div>
+						</article>
+					<?php endforeach; ?>
+				</div>
 			</div>
 		</div>
 	</section>
