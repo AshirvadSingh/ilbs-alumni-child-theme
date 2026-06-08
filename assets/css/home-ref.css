@@ -1843,3 +1843,269 @@ a.ilbs-ref-year-btn {
     height: 50px;
   }
 }
+
+/* ── Authoritative homepage spacing + alternating journey timeline ── */
+.ilbs-home .container,
+.ilbs-home .premium-container {
+  width: min(100%, var(--container-width));
+  max-width: var(--container-width);
+  padding-inline: var(--container-padding);
+}
+
+.ilbs-home .ilbs-ref-section,
+.ilbs-home .premium-section {
+  padding-block: var(--section-padding-lg);
+}
+
+.ilbs-home .ilbs-ref-section--soft {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(204, 251, 241, 0.48), transparent 30%),
+    linear-gradient(180deg, #f8fffe 0%, #ffffff 100%);
+}
+
+.ilbs-ref-section-head {
+  margin-bottom: var(--header-gap);
+}
+
+.ilbs-ref-welcome__grid,
+.ilbs-ref-contact__grid,
+.ilbs-ref-awards-layout,
+.ilbs-ref-awards-archive {
+  gap: var(--card-gap);
+}
+
+.ilbs-ref-stats__grid,
+.ilbs-ref-members,
+.ilbs-ref-events,
+.ilbs-ref-awards-grid,
+.ilbs-ref-pub-grid,
+.ilbs-ref-masonry,
+.ilbs-ref-leaders,
+.ilbs-ref-blog-grid,
+.ilbs-ref-resources {
+  gap: var(--card-gap);
+}
+
+.timeline-section {
+  padding-block: var(--section-padding-xl) !important;
+  background:
+    radial-gradient(circle at 10% 12%, rgba(20, 184, 166, 0.16), transparent 26%),
+    radial-gradient(circle at 88% 30%, rgba(153, 246, 228, 0.36), transparent 32%),
+    linear-gradient(180deg, #ffffff 0%, #f8fffe 48%, #ffffff 100%);
+}
+
+.timeline-section .section-header {
+  max-width: 780px;
+}
+
+.timeline-list {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(34px, 5vw, 64px);
+  padding-block: clamp(12px, 2vw, 24px);
+}
+
+.timeline-list::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 3px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(180deg, transparent 0%, #14b8a6 16%, #0f766e 50%, #5eead4 84%, transparent 100%);
+  box-shadow: 0 0 30px rgba(20, 184, 166, 0.28);
+}
+
+.timeline-section .timeline-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 86px minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 42px);
+  align-items: center;
+  min-height: 190px;
+}
+
+.timeline-section .timeline-node {
+  position: relative;
+  z-index: 2;
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(135deg, #0f766e, #14b8a6 70%, #5eead4);
+  border: 8px solid #f8fffe;
+  box-shadow: 0 18px 42px rgba(15, 118, 110, 0.22), 0 0 0 1px rgba(20,184,166,.18);
+}
+
+.timeline-section .timeline-node i {
+  font-size: 1.25rem;
+}
+
+.timeline-section .timeline-card {
+  position: relative;
+  z-index: 1;
+  grid-column: 1;
+  grid-row: 1;
+  padding: clamp(24px, 3vw, 34px);
+  overflow: hidden;
+  transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), border-color 0.45s var(--ease);
+}
+
+.timeline-section .timeline-item:nth-child(even) .timeline-card {
+  grid-column: 3;
+}
+
+.timeline-section .timeline-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: linear-gradient(90deg, #0f766e, #14b8a6, #99f6e4);
+}
+
+.timeline-section .timeline-card::after {
+  content: "";
+  position: absolute;
+  right: -80px;
+  top: -80px;
+  width: 180px;
+  height: 180px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(204,251,241,.65), transparent 68%);
+  pointer-events: none;
+}
+
+.timeline-section .timeline-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(20, 184, 166, 0.32);
+  box-shadow: 0 34px 96px rgba(15, 118, 110, 0.16);
+}
+
+.timeline-card__meta {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.timeline-year {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(20, 184, 166, 0.11);
+  color: var(--primary-dark);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.timeline-step {
+  color: rgba(15, 118, 110, 0.18);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  line-height: 0.8;
+}
+
+.timeline-section .timeline-card h3 {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 10px;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.72rem);
+  line-height: 1.18;
+}
+
+.timeline-section .timeline-card p {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.96rem;
+  line-height: 1.75;
+}
+
+@media (max-width: 991px) {
+  .timeline-list {
+    gap: 24px;
+  }
+
+  .timeline-list::before {
+    left: 32px;
+  }
+
+  .timeline-section .timeline-item {
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 18px;
+    min-height: auto;
+  }
+
+  .timeline-section .timeline-node {
+    grid-column: 1;
+    width: 58px;
+    height: 58px;
+    border-width: 7px;
+  }
+
+  .timeline-section .timeline-card,
+  .timeline-section .timeline-item:nth-child(even) .timeline-card {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 575px) {
+  .timeline-list::before {
+    left: 26px;
+  }
+
+  .timeline-section .timeline-item {
+    grid-template-columns: 52px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .timeline-section .timeline-node {
+    width: 50px;
+    height: 50px;
+    border-width: 6px;
+  }
+
+  .timeline-section .timeline-card {
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .timeline-card__meta {
+    align-items: flex-start;
+  }
+}
+
+/* Reset legacy timeline-card skin from the previous iteration on the wrapper item. */
+.timeline-section .timeline-item,
+.timeline-section .timeline-item:hover {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  transform: none;
+  overflow: visible;
+}
+
+.timeline-section .timeline-item::before {
+  display: none !important;
+}

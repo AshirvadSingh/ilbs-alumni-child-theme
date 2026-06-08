@@ -180,67 +180,59 @@ $hero_quick_links = [
 	</section>
 
 
-	<!-- 3B. INSTITUTIONAL TIMELINE -->
-	<section class="ilbs-ref-section ilbs-ref-timeline-section" id="timeline" data-reveal>
-		<div class="container">
-			<div class="ilbs-ref-timeline-panel">
-				<div class="ilbs-ref-timeline-panel__intro">
-					<div>
-						<span class="ilbs-eyebrow"><?php esc_html_e( 'Journey', 'ilbs-alumni' ); ?></span>
-						<h2 class="ilbs-ref-title"><?php esc_html_e( 'ILBS Alumni Growth Timeline', 'ilbs-alumni' ); ?></h2>
-					</div>
-					<p class="ilbs-ref-section-lead"><?php esc_html_e( 'A premium institutional timeline that keeps the alumni story structured, readable and balanced across every screen size.', 'ilbs-alumni' ); ?></p>
-				</div>
+	<!-- 4. PREMIUM TIMELINE / JOURNEY -->
+	<section class="premium-section ilbs-ref-section timeline-section ilbs-ref-timeline-section" id="timeline" data-reveal>
+		<div class="container premium-container">
+			<div class="section-header ilbs-ref-section-head ilbs-ref-section-head--center">
+				<span class="section-kicker ilbs-eyebrow"><?php esc_html_e( 'Journey', 'ilbs-alumni' ); ?></span>
+				<h2 class="ilbs-ref-title"><?php esc_html_e( 'ILBS Alumni Journey', 'ilbs-alumni' ); ?></h2>
+				<p><?php esc_html_e( 'Tracing milestones, reunions, achievements, and contributions across the years.', 'ilbs-alumni' ); ?></p>
+			</div>
 
-				<?php
-				$timeline_items = function_exists( 'have_rows' ) && have_rows( 'home_timeline' ) ? [] : [
-					[ 'year' => __( '2009', 'ilbs-alumni' ), 'title' => __( 'Institutional Foundation', 'ilbs-alumni' ), 'text' => __( 'ILBS expands as a dedicated centre of excellence for liver and biliary sciences education, clinical care and research.', 'ilbs-alumni' ), 'icon' => 'bi-building' ],
-					[ 'year' => __( '2014–2020', 'ilbs-alumni' ), 'title' => __( 'Research & Alumni Momentum', 'ilbs-alumni' ), 'text' => __( 'Graduates, clinicians and scholars strengthen the institute’s academic footprint through reunions, awards and publications.', 'ilbs-alumni' ), 'icon' => 'bi-journal-medical' ],
-					[ 'year' => __( '2023', 'ilbs-alumni' ), 'title' => __( 'Recognition Archive', 'ilbs-alumni' ), 'text' => __( 'Awards, publications and leadership stories become a searchable digital showcase for the alumni network.', 'ilbs-alumni' ), 'icon' => 'bi-trophy' ],
-					[ 'year' => __( '2026', 'ilbs-alumni' ), 'title' => __( 'Premium Alumni Portal', 'ilbs-alumni' ), 'text' => __( 'The website matures into a modern institutional hub for members, events, media, resources and lifelong collaboration.', 'ilbs-alumni' ), 'icon' => 'bi-stars' ],
-				];
+			<?php
+			/*
+			 * Future ACF connection:
+			 * Repeater: home_timeline
+			 * Sub fields: timeline_year, timeline_title, timeline_description, timeline_icon
+			 * Legacy sub field names (year/title/description/icon) are also supported below.
+			 */
+			$timeline_items = function_exists( 'have_rows' ) && have_rows( 'home_timeline' ) ? [] : [
+				[ 'year' => __( '2014', 'ilbs-alumni' ), 'title' => __( 'Alumni Network Initiated', 'ilbs-alumni' ), 'text' => __( 'The foundation of a lifelong ILBS alumni community begins with an academic and professional network for graduates.', 'ilbs-alumni' ), 'icon' => 'bi-diagram-3' ],
+				[ 'year' => __( '2016', 'ilbs-alumni' ), 'title' => __( 'First Alumni Meet', 'ilbs-alumni' ), 'text' => __( 'Early reunions bring batches, faculty and researchers together to strengthen institutional belonging.', 'ilbs-alumni' ), 'icon' => 'bi-people' ],
+				[ 'year' => __( '2018', 'ilbs-alumni' ), 'title' => __( 'Research Collaboration Growth', 'ilbs-alumni' ), 'text' => __( 'Alumni-led collaborations expand across hepatology, transplant medicine and allied liver science disciplines.', 'ilbs-alumni' ), 'icon' => 'bi-flask' ],
+				[ 'year' => __( '2020', 'ilbs-alumni' ), 'title' => __( 'Digital Alumni Engagement', 'ilbs-alumni' ), 'text' => __( 'Digital communication, lecture series and virtual knowledge exchange keep the network active across geographies.', 'ilbs-alumni' ), 'icon' => 'bi-camera-video' ],
+				[ 'year' => __( '2022', 'ilbs-alumni' ), 'title' => __( 'Expanded Alumni Directory', 'ilbs-alumni' ), 'text' => __( 'Structured profiles help alumni discover peers by batch, specialization, location and research interests.', 'ilbs-alumni' ), 'icon' => 'bi-person-lines-fill' ],
+				[ 'year' => __( '2023', 'ilbs-alumni' ), 'title' => __( 'Awards & Publications Recognition', 'ilbs-alumni' ), 'text' => __( 'Achievements, awards and publications become a visible institutional archive of alumni excellence.', 'ilbs-alumni' ), 'icon' => 'bi-trophy' ],
+				[ 'year' => __( '2024', 'ilbs-alumni' ), 'title' => __( 'Stronger Global Alumni Network', 'ilbs-alumni' ), 'text' => __( 'The portal evolves into a premium hub for reunions, mentorship, publications and global alumni collaboration.', 'ilbs-alumni' ), 'icon' => 'bi-globe2' ],
+			];
 
-				if ( function_exists( 'have_rows' ) && have_rows( 'home_timeline' ) ) {
-					while ( have_rows( 'home_timeline' ) ) {
-						the_row();
-						$timeline_items[] = [
-							'year'  => get_sub_field( 'year' ),
-							'title' => get_sub_field( 'title' ),
-							'text'  => get_sub_field( 'description' ),
-							'icon'  => get_sub_field( 'icon' ) ?: 'bi-stars',
-						];
-					}
+			if ( function_exists( 'have_rows' ) && have_rows( 'home_timeline' ) ) {
+				while ( have_rows( 'home_timeline' ) ) {
+					the_row();
+					$timeline_items[] = [
+						'year'  => get_sub_field( 'timeline_year' ) ?: get_sub_field( 'year' ),
+						'title' => get_sub_field( 'timeline_title' ) ?: get_sub_field( 'title' ),
+						'text'  => get_sub_field( 'timeline_description' ) ?: get_sub_field( 'description' ),
+						'icon'  => get_sub_field( 'timeline_icon' ) ?: get_sub_field( 'icon' ) ?: 'bi-stars',
+					];
 				}
-				?>
+			}
+			?>
 
-				<div class="ilbs-ref-timeline-summary" aria-label="<?php esc_attr_e( 'Timeline highlights', 'ilbs-alumni' ); ?>">
-					<div>
-						<strong><?php echo esc_html( count( $timeline_items ) ); ?></strong>
-						<span><?php esc_html_e( 'Milestones', 'ilbs-alumni' ); ?></span>
-					</div>
-					<div>
-						<strong><?php esc_html_e( '360°', 'ilbs-alumni' ); ?></strong>
-						<span><?php esc_html_e( 'Alumni Journey', 'ilbs-alumni' ); ?></span>
-					</div>
-					<div>
-						<strong><?php esc_html_e( 'Global', 'ilbs-alumni' ); ?></strong>
-						<span><?php esc_html_e( 'Clinical Network', 'ilbs-alumni' ); ?></span>
-					</div>
-				</div>
-
-				<div class="ilbs-ref-timeline" data-reveal-stagger>
-					<?php foreach ( $timeline_items as $index => $timeline_item ) : ?>
-						<article class="ilbs-ref-timeline-card" data-reveal-item>
-							<div class="ilbs-ref-timeline-card__step"><?php echo esc_html( str_pad( (string) ( $index + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></div>
-							<div class="ilbs-ref-timeline-card__marker"><i class="bi <?php echo esc_attr( $timeline_item['icon'] ); ?>" aria-hidden="true"></i></div>
-							<div class="ilbs-ref-timeline-card__content">
-								<span class="ilbs-ref-timeline-card__year"><?php echo esc_html( $timeline_item['year'] ); ?></span>
-								<h3><?php echo esc_html( $timeline_item['title'] ); ?></h3>
-								<p><?php echo esc_html( $timeline_item['text'] ); ?></p>
+			<div class="section-content timeline-list ilbs-ref-timeline" data-reveal-stagger>
+				<?php foreach ( $timeline_items as $index => $timeline_item ) : ?>
+					<article class="timeline-item ilbs-ref-timeline-card" data-reveal-item>
+						<div class="timeline-node" aria-hidden="true"><i class="bi <?php echo esc_attr( $timeline_item['icon'] ); ?>"></i></div>
+						<div class="glass-card premium-card timeline-card">
+							<div class="timeline-card__meta">
+								<span class="timeline-year"><?php echo esc_html( $timeline_item['year'] ); ?></span>
+								<span class="timeline-step"><?php echo esc_html( str_pad( (string) ( $index + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span>
 							</div>
-						</article>
-					<?php endforeach; ?>
-				</div>
+							<h3><?php echo esc_html( $timeline_item['title'] ); ?></h3>
+							<p><?php echo esc_html( $timeline_item['text'] ); ?></p>
+						</div>
+					</article>
+				<?php endforeach; ?>
 			</div>
 		</div>
 	</section>
