@@ -180,6 +180,49 @@ $hero_quick_links = [
 	</section>
 
 
+	<!-- 3B. INSTITUTIONAL TIMELINE -->
+	<section class="ilbs-ref-section ilbs-ref-timeline-section" id="timeline" data-reveal>
+		<div class="container">
+			<div class="ilbs-ref-section-head ilbs-ref-section-head--center">
+				<span class="ilbs-eyebrow"><?php esc_html_e( 'Journey', 'ilbs-alumni' ); ?></span>
+				<h2 class="ilbs-ref-title"><?php esc_html_e( 'ILBS Alumni Growth Timeline', 'ilbs-alumni' ); ?></h2>
+				<p class="ilbs-ref-section-lead"><?php esc_html_e( 'A curated view of institutional milestones, alumni recognition and the portal experience evolving for a global medical research community.', 'ilbs-alumni' ); ?></p>
+			</div>
+			<div class="ilbs-ref-timeline" data-reveal-stagger>
+				<?php
+				$timeline_items = function_exists( 'have_rows' ) && have_rows( 'home_timeline' ) ? [] : [
+					[ 'year' => __( '2009', 'ilbs-alumni' ), 'title' => __( 'Institutional Foundation', 'ilbs-alumni' ), 'text' => __( 'ILBS expands as a dedicated centre of excellence for liver and biliary sciences education, clinical care and research.', 'ilbs-alumni' ), 'icon' => 'bi-building' ],
+					[ 'year' => __( '2014–2020', 'ilbs-alumni' ), 'title' => __( 'Research & Alumni Momentum', 'ilbs-alumni' ), 'text' => __( 'Graduates, clinicians and scholars strengthen the institute’s academic footprint through reunions, awards and publications.', 'ilbs-alumni' ), 'icon' => 'bi-journal-medical' ],
+					[ 'year' => __( '2023', 'ilbs-alumni' ), 'title' => __( 'Recognition Archive', 'ilbs-alumni' ), 'text' => __( 'Awards, publications and leadership stories become a searchable digital showcase for the alumni network.', 'ilbs-alumni' ), 'icon' => 'bi-trophy' ],
+					[ 'year' => __( '2026', 'ilbs-alumni' ), 'title' => __( 'Premium Alumni Portal', 'ilbs-alumni' ), 'text' => __( 'The website matures into a modern institutional hub for members, events, media, resources and lifelong collaboration.', 'ilbs-alumni' ), 'icon' => 'bi-stars' ],
+				];
+
+				if ( function_exists( 'have_rows' ) && have_rows( 'home_timeline' ) ) {
+					while ( have_rows( 'home_timeline' ) ) {
+						the_row();
+						$timeline_items[] = [
+							'year'  => get_sub_field( 'year' ),
+							'title' => get_sub_field( 'title' ),
+							'text'  => get_sub_field( 'description' ),
+							'icon'  => get_sub_field( 'icon' ) ?: 'bi-stars',
+						];
+					}
+				}
+
+				foreach ( $timeline_items as $timeline_item ) :
+					?>
+					<article class="ilbs-ref-timeline-card" data-reveal-item>
+						<div class="ilbs-ref-timeline-card__marker"><i class="bi <?php echo esc_attr( $timeline_item['icon'] ); ?>" aria-hidden="true"></i></div>
+						<span class="ilbs-ref-timeline-card__year"><?php echo esc_html( $timeline_item['year'] ); ?></span>
+						<h3><?php echo esc_html( $timeline_item['title'] ); ?></h3>
+						<p><?php echo esc_html( $timeline_item['text'] ); ?></p>
+					</article>
+				<?php endforeach; ?>
+			</div>
+		</div>
+	</section>
+
+
 	<!-- 4. TESTIMONIALS -->
 	<section class="ilbs-ref-section" data-reveal>
 		<div class="container">
@@ -334,7 +377,7 @@ $hero_quick_links = [
 	</section>
 
 
-	<!-- 7. AWARDS & PUBLICATIONS — sidebar year filter + grid -->
+	<!-- 7. AWARDS & PUBLICATIONS — premium year filter pills + grid -->
 	<section class="ilbs-ref-section ilbs-ref-section--soft ilbs-ref-awards-block" id="awards" data-reveal>
 		<div class="container">
 			<div class="ilbs-ref-section-head ilbs-ref-section-head--center mb-5">
@@ -343,7 +386,7 @@ $hero_quick_links = [
 			</div>
 			<div class="ilbs-ref-awards-layout">
 				<aside class="ilbs-ref-awards-sidebar" aria-label="<?php esc_attr_e( 'Filter by year', 'ilbs-alumni' ); ?>">
-					<h3 class="ilbs-ref-awards-sidebar__title"><?php esc_html_e( 'Filter by Year', 'ilbs-alumni' ); ?></h3>
+					<h3 class="ilbs-ref-awards-sidebar__title"><?php esc_html_e( 'Explore by Year', 'ilbs-alumni' ); ?></h3>
 					<nav class="ilbs-ref-year-nav">
 						<?php foreach ( $award_years as $yr ) : ?>
 							<button type="button"
@@ -365,22 +408,15 @@ $hero_quick_links = [
 					</div>
 					<div class="ilbs-ref-awards-grid" id="homeAwardsGrid" data-reveal-stagger>
 						<?php
-						$all_awards = new WP_Query( [
-							'post_type'      => 'ilbs_award',
-							'posts_per_page' => -1,
-							'meta_key'       => 'award_year',
-							'orderby'        => 'meta_value_num',
-							'order'          => 'DESC',
-						] );
-						if ( $all_awards->have_posts() ) :
-							while ( $all_awards->have_posts() ) : $all_awards->the_post();
-								$yr = function_exists( 'get_field' ) ? get_field( 'award_year' ) : '';
+						$award_pub_items = ilbs_get_award_publication_items();
+						if ( ! empty( $award_pub_items ) ) :
+							foreach ( $award_pub_items as $award_pub_item ) :
+								$yr = ilbs_get_award_item_year( $award_pub_item->ID );
 								$hidden = (string) $yr !== (string) $default_year;
 								echo '<div class="ilbs-ref-award-wrap' . ( $hidden ? ' is-hidden' : '' ) . '" data-award-year-wrap="' . esc_attr( $yr ) . '">';
-								ilbs_render_award_card( get_the_ID() );
+								ilbs_render_award_card( $award_pub_item->ID );
 								echo '</div>';
-							endwhile;
-							wp_reset_postdata();
+							endforeach;
 						else :
 							for ( $i = 0; $i < 4; $i++ ) : ?>
 								<article class="ilbs-card ilbs-award-card ilbs-award-card--ref ilbs-ref-award-placeholder" data-reveal-item>
