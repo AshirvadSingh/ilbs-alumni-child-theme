@@ -1,0 +1,91 @@
+/*
+Theme Name:   ILBS Alumni Child
+Theme URI:    https://ilbs.in/alumni
+Description:  Premium Twenty Twenty-One child theme for the ILBS Alumni Association portal. Teal design system, GSAP animations, Swiper sliders, glassmorphism UI, and custom post type templates.
+Author:       ILBS Alumni
+Author URI:   https://ilbs.in
+Template:     twentytwentyone
+Version:      2.1.0
+License:      GNU General Public License v2 or later
+License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+Tags:         child-theme, alumni, medical, custom-post-types
+Text Domain:  ilbs-alumni
+*/
+
+/* Bridge variables — full system in assets/css/main.css */
+:root {
+  --primary: #0f766e;
+  --secondary: #134e4a;
+  --accent: #99f6e4;
+  --bg: #f8fffe;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --line: rgba(15, 118, 110, 0.1);
+  --glass: rgba(255, 255, 255, 0.76);
+  --shadow: 0 24px 70px rgba(15, 118, 110, 0.1);
+  --radius: 16px;
+}
+
+/* WordPress search form in overlay */
+.search-overlay .search-form,
+.search-overlay form.search-form {
+  display: block;
+}
+
+.search-overlay input[type="search"],
+.search-overlay .search-field {
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.25);
+  background: transparent;
+  color: #fff;
+  font-size: clamp(1.75rem, 4vw, 3.5rem);
+  font-weight: 600;
+  outline: 0;
+  padding: 16px 0;
+}
+
+.search-overlay input[type="search"]::placeholder,
+.search-overlay .search-field::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.search-overlay label {
+  display: none;
+}
+
+.search-overlay .search-submit {
+  display: none;
+}
+
+/* Visually hidden (accessibility) */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Swiper pagination — teal */
+.swiper-pagination-bullet-active {
+  background: var(--primary) !important;
+}
+
+/* Main content offset for fixed header */
+#main-content {
+  min-height: 50vh;
+}
+
+/* Early link reset (before Bootstrap) */
+a,
+a:hover,
+a:focus,
+a:active {
+  text-decoration: none;
+}
