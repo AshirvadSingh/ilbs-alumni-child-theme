@@ -2651,3 +2651,178 @@ textarea:focus {
     display: none;
   }
 }
+
+/* ── Premium spacing corrections for inner pages ───────── */
+.page-hero,
+.ilbs-page-hero {
+  padding: calc(var(--header-h) + clamp(44px, 6vw, 76px)) 0 clamp(44px, 6vw, 72px);
+}
+
+.section {
+  padding: clamp(76px, 8vw, 108px) 0;
+}
+
+.ilbs-members-archive {
+  padding-top: clamp(48px, 6vw, 76px);
+}
+
+.filter-panel {
+  margin-bottom: clamp(30px, 4vw, 48px);
+  box-shadow: 0 18px 60px rgba(15, 118, 110, 0.08);
+}
+
+.ilbs-members-grid.directory-grid {
+  gap: clamp(24px, 3vw, 34px);
+}
+
+.wp-table,
+.award-table,
+.ilbs-table {
+  table-layout: fixed;
+  box-shadow: 0 18px 60px rgba(15, 118, 110, 0.08);
+}
+
+.wp-table th,
+.award-table th,
+.ilbs-table th {
+  position: static;
+  top: auto;
+}
+
+.wp-table td,
+.award-table td,
+.ilbs-table td,
+.wp-table th,
+.award-table th,
+.ilbs-table th {
+  vertical-align: top;
+  line-height: 1.6;
+}
+
+#governance .row,
+#mission .row {
+  row-gap: clamp(28px, 4vw, 48px);
+}
+
+#governance h2 {
+  margin-bottom: 12px;
+}
+
+#governance p {
+  max-width: 430px;
+  margin-bottom: 0;
+  line-height: 1.75;
+}
+
+.timeline {
+  position: relative;
+  display: grid;
+  gap: clamp(28px, 4vw, 46px);
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 118px;
+  top: 18px;
+  bottom: 18px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(20,184,166,0), rgba(20,184,166,.55), rgba(20,184,166,0));
+}
+
+.timeline-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  gap: clamp(24px, 4vw, 54px);
+  align-items: start;
+}
+
+.timeline-date {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 48px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--teal-700), var(--teal-500));
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 0 14px 38px rgba(15, 118, 110, 0.2);
+}
+
+.timeline-item .content-card {
+  border-color: rgba(15, 118, 110, 0.12);
+  box-shadow: 0 20px 70px rgba(15, 118, 110, 0.09);
+}
+
+@media (max-width: 767px) {
+  .section {
+    padding: 64px 0;
+  }
+
+  .timeline::before {
+    left: 16px;
+  }
+
+  .timeline-item {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding-left: 40px;
+  }
+
+  .timeline-date {
+    justify-content: flex-start;
+    width: fit-content;
+  }
+}
+
+/* ── Final spacing pass for archive/filter/table sections ── */
+.ilbs-members-archive .filter-panel {
+  padding: clamp(18px, 2.4vw, 28px);
+  border-radius: 28px;
+}
+
+.ilbs-members-archive .row.g-3 {
+  --bs-gutter-x: 1rem;
+  --bs-gutter-y: 1rem;
+  align-items: center;
+}
+
+.ilbs-members-archive .form-control,
+.ilbs-members-archive .form-select,
+.ilbs-members-archive .btn {
+  min-height: 54px;
+}
+
+#memberGrid {
+  margin-top: 0;
+}
+
+#governance {
+  overflow: hidden;
+}
+
+#governance .wp-table {
+  min-width: min(680px, 100%);
+}
+
+#governance .col-lg-4,
+#governance .col-lg-8 {
+  align-self: center;
+}
+
+@media (max-width: 991px) {
+  #governance .wp-table {
+    min-width: 640px;
+  }
+
+  #governance .col-lg-8 {
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+}
