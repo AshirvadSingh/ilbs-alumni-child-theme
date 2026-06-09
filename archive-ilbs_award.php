@@ -2,10 +2,10 @@
 /**
  * ILBS Alumni — Awards & Publications Archive (Premium Year Filters)
  */
+
 get_header();
 
-$years       = ilbs_get_award_years();
-$active_year = isset( $_GET['award_year'] ) ? sanitize_text_field( wp_unslash( $_GET['award_year'] ) ) : '';
+$taxonomy = 'ilbs_batch';
 
 if ( empty( $years ) ) {
 	$years = [ '2023', '2022', '2020', '2018', '2017', '2016', '2015', '2014' ];
