@@ -824,3 +824,26 @@ add_action( 'init', 'ilbs_disable_parent_header_footer' );
 function ilbs_disable_parent_header_footer() {
 	remove_action( 'twentytwentyone_header', 'twentytwentyone_header_markup' );
 }
+
+/**
+ * Disable standalone award detail pages; the archive is the primary experience.
+ */
+add_action( 'template_redirect', 'ilbs_redirect_single_awards_to_archive' );
+function ilbs_redirect_single_awards_to_archive() {
+	if ( ! is_singular( 'ilbs_award' ) ) {
+		return;
+	}
+
+	$archive_url = get_post_type_archive_link( 'ilbs_award' );
+	if ( ! $archive_url ) {
+		$archive_url = home_url( '/' );
+	}
+
+	$year = ilbs_get_award_item_year( get_queried_object_id() );
+	if ( $year ) {
+		$archive_url = add_query_arg( 'award_year', $year, $archive_url );
+	}
+
+	wp_safe_redirect( $archive_url, 301 );
+	exit;
+}

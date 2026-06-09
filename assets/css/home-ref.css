@@ -2347,3 +2347,25 @@ a.ilbs-ref-year-btn {
     grid-template-columns: 1fr;
   }
 }
+
+/* Award cards no longer link to a single award page; show award + department inline. */
+.ilbs-award-card--award h3 {
+  color: var(--text);
+}
+
+.ilbs-award-card__details {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ilbs-award-card__details .ilbs-award-card__meta {
+  margin: 0;
+  padding-left: 12px;
+  border-left: 2px solid rgba(20, 184, 166, 0.32);
+  line-height: 1.55;
+}
+
+.ilbs-award-card__details .ilbs-award-card__meta strong {
+  color: var(--primary-dark);
+}

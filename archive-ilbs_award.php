@@ -121,7 +121,6 @@ $volume_number = false === $active_index ? count( $years ) : count( $years ) - (
 							</div>
 						</section>
 					</div>
-
 				</div>
 			</article>
 		</div>
