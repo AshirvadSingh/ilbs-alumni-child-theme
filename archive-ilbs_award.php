@@ -1,80 +1,193 @@
 <?php
 /**
- * ILBS Alumni — Awards & Publications Archive (Premium Year Filters)
+ * Template: Awards Archive
  */
+
 get_header();
 
-$years       = ilbs_get_award_years();
-$active_year = isset( $_GET['award_year'] ) ? sanitize_text_field( wp_unslash( $_GET['award_year'] ) ) : '';
+$taxonomy = 'ilbs_batch';
 
-if ( empty( $years ) ) {
-	$years = [ '2023', '2022', '2020', '2018', '2017', '2016', '2015', '2014' ];
-}
-if ( ! $active_year ) {
-	$active_year = $years[0];
+$terms = get_terms([
+	'taxonomy'   => $taxonomy,
+	'hide_empty' => true,
+	'orderby'    => 'name',
+	'order'      => 'DESC',
+]);
+
+$active_batch = isset($_GET['batch'])
+	? sanitize_text_field(wp_unslash($_GET['batch']))
+	: '';
+
+$args = [
+	'post_type'      => 'ilbs_award',
+	'posts_per_page' => -1,
+	'post_status'    => 'publish',
+	'orderby'        => 'date',
+	'order'          => 'DESC',
+];
+
+if ($active_batch) {
+	$args['tax_query'] = [
+		[
+			'taxonomy' => $taxonomy,
+			'field'    => 'slug',
+			'terms'    => $active_batch,
+		]
+	];
 }
 
-$all_items   = ilbs_get_award_publication_items();
-$items       = array_values( array_filter( $all_items, function ( $item ) use ( $active_year ) {
-	return (string) ilbs_get_award_item_year( $item->ID ) === (string) $active_year;
-} ) );
-$archive_url = get_post_type_archive_link( 'ilbs_award' );
+$query = new WP_Query($args);
+
+$archive_url = get_post_type_archive_link('ilbs_award');
 ?>
 
 <main id="main-content">
 
-	<section class="ilbs-awards-hero ilbs-awards-hero--premium" data-reveal>
+	<section class="ilbs-awards-hero ilbs-awards-hero--premium">
 		<div class="container position-relative">
-			<span class="ilbs-eyebrow"><?php esc_html_e( 'Achievements', 'ilbs-alumni' ); ?></span>
-			<h1><?php esc_html_e( 'Alumni Awards & Publications', 'ilbs-alumni' ); ?></h1>
-			<p class="ilbs-section-lead"><?php esc_html_e( 'A year-by-year institutional archive of alumni excellence, research output, clinical leadership and scholarly recognition.', 'ilbs-alumni' ); ?></p>
+			<span class="ilbs-eyebrow">Achievements</span>
+
+			<h1>Alumni Awards & Publications</h1>
+
+			<p class="ilbs-section-lead">
+				A year-wise archive showcasing outstanding achievements,
+				academic excellence and professional recognition of ILBS Alumni.
+			</p>
 		</div>
 	</section>
 
 	<section class="ilbs-section ilbs-ref-awards-block" style="padding-top:0;">
 		<div class="container">
+
 			<div class="ilbs-ref-awards-archive ilbs-ref-awards-layout">
 
-				<aside class="ilbs-ref-awards-sidebar" aria-label="<?php esc_attr_e( 'Filter by year', 'ilbs-alumni' ); ?>">
-					<h3 class="ilbs-ref-awards-sidebar__title"><?php esc_html_e( 'Explore by Year', 'ilbs-alumni' ); ?></h3>
+				<aside class="ilbs-ref-awards-sidebar">
+
+					<h3 class="ilbs-ref-awards-sidebar__title">
+						Explore by Batch
+					</h3>
+
 					<nav class="ilbs-ref-year-nav">
-						<?php foreach ( $years as $year ) :
-							$url = add_query_arg( 'award_year', $year, $archive_url );
-							?>
-							<a href="<?php echo esc_url( $url ); ?>"
-								class="ilbs-ref-year-btn <?php echo (string) $year === (string) $active_year ? 'is-active' : ''; ?>"
-								<?php echo (string) $year === (string) $active_year ? 'aria-current="true"' : ''; ?>>
-								<?php echo esc_html( $year ); ?>
-							</a>
-						<?php endforeach; ?>
+
+						<a href="<?php echo esc_url($archive_url); ?>"
+						   class="ilbs-ref-year-btn <?php echo empty($active_batch) ? 'is-active' : ''; ?>">
+							All
+						</a>
+
+						<?php if (!empty($terms) && !is_wp_error($terms)) : ?>
+
+							<?php foreach ($terms as $term) : ?>
+
+								<a href="<?php echo esc_url(
+									add_query_arg(
+										'batch',
+										$term->slug,
+										$archive_url
+									)
+								); ?>"
+								class="ilbs-ref-year-btn <?php echo $active_batch === $term->slug ? 'is-active' : ''; ?>">
+
+									<?php echo esc_html($term->name); ?>
+
+								</a>
+
+							<?php endforeach; ?>
+
+						<?php endif; ?>
+
 					</nav>
+
 				</aside>
 
 				<div class="ilbs-ref-awards-main">
+
 					<h2 class="ilbs-ref-year-heading">
-						<span><?php echo esc_html( $active_year ); ?></span> <?php esc_html_e( 'Awards & Publications', 'ilbs-alumni' ); ?>
+
+						<span>
+							<?php echo $active_batch ? esc_html($active_batch) : 'All'; ?>
+						</span>
+
+						Awards & Publications
+
 					</h2>
 
-					<div class="ilbs-ref-awards-search">
-						<label class="visually-hidden" for="ilbsAwardSearch"><?php esc_html_e( 'Search awards and publications', 'ilbs-alumni' ); ?></label>
-						<input type="search" id="ilbsAwardSearch" placeholder="<?php esc_attr_e( 'Search title, recipient, authors, department…', 'ilbs-alumni' ); ?>" autocomplete="off">
-						<i class="bi bi-search" aria-hidden="true"></i>
+					<div class="ilbs-ref-awards-grid">
+
+						<?php if ($query->have_posts()) : ?>
+
+							<?php while ($query->have_posts()) : $query->the_post();
+
+								$award_name = function_exists('get_field')
+									? get_field('award_name')
+									: '';
+
+								$department = function_exists('get_field')
+									? get_field('department_name')
+									: '';
+
+								$batch_terms = get_the_terms(
+									get_the_ID(),
+									'ilbs_batch'
+								);
+								?>
+
+								<article class="student-award-card">
+
+									<?php if ($award_name) : ?>
+
+										<div class="award-badge">
+											<?php echo esc_html($award_name); ?>
+										</div>
+
+									<?php endif; ?>
+
+									<h3 class="student-name">
+										<?php the_title(); ?>
+									</h3>
+
+									<?php if ($department) : ?>
+
+										<div class="student-department">
+											<?php echo esc_html($department); ?>
+										</div>
+
+									<?php endif; ?>
+
+									<?php if ($batch_terms && !is_wp_error($batch_terms)) : ?>
+
+										<div class="student-batch">
+
+											Batch:
+											<?php echo esc_html($batch_terms[0]->name); ?>
+
+										</div>
+
+									<?php endif; ?>
+
+								</article>
+
+							<?php endwhile; ?>
+
+						<?php else : ?>
+
+							<div class="ilbs-empty-state">
+
+								<p>
+									No awards found for the selected batch.
+								</p>
+
+							</div>
+
+						<?php endif; ?>
+
+						<?php wp_reset_postdata(); ?>
+
 					</div>
 
-					<div class="ilbs-ref-awards-grid" data-reveal-stagger>
-						<?php if ( ! empty( $items ) ) :
-							foreach ( $items as $item ) :
-								ilbs_render_award_card( $item->ID );
-							endforeach;
-						else : ?>
-							<div class="ilbs-empty-state" style="grid-column:1/-1;">
-								<p><?php esc_html_e( 'No awards or publications found for this year.', 'ilbs-alumni' ); ?></p>
-							</div>
-						<?php endif; ?>
-					</div>
 				</div>
 
 			</div>
+
 		</div>
 	</section>
 
