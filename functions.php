@@ -796,7 +796,7 @@ function ilbs_get_award_department( $post_id ) {
 	if ( ! function_exists( 'get_field' ) ) {
 		return '';
 	}
-	$dept = get_field( 'department', $post_id );
+	$dept = get_field( 'department_name', $post_id ) ?: get_field( 'department', $post_id );
 	if ( $dept ) {
 		return (string) $dept;
 	}

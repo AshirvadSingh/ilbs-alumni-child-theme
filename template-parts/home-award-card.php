@@ -13,7 +13,7 @@ $year        = ilbs_get_award_item_year( $post_id );
 $post_title  = get_the_title( $post_id );
 $award_title = $post_title;
 if ( ! $is_pub && function_exists( 'get_field' ) ) {
-	$award_title = get_field( 'award_display_name', $post_id ) ?: get_field( 'award_name', $post_id ) ?: get_field( 'award_title', $post_id ) ?: $post_title;
+	$award_title = get_field( 'award_name', $post_id ) ?: get_field( 'award_display_name', $post_id ) ?: get_field( 'award_title', $post_id ) ?: $post_title;
 }
 $name        = $is_pub && function_exists( 'get_field' ) && get_field( 'authors', $post_id ) ? get_field( 'authors', $post_id ) : ilbs_get_award_recipient_name( $post_id );
 if ( is_array( $name ) ) {
