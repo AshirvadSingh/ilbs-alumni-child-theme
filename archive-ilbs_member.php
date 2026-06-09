@@ -24,7 +24,7 @@ $locations       = get_terms( [ 'taxonomy' => 'ilbs_location',       'hide_empty
 	</div>
 </section>
 
-<section class="ilbs-section section">
+<section class="ilbs-section section ilbs-members-archive">
 	<div class="container">
 
 		<!-- Filter Panel -->

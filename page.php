@@ -6,7 +6,7 @@ get_header();
 while ( have_posts() ) :
 	the_post();
 ?>
-<section class="page-hero">
+<section class="page-hero ilbs-premium-subbanner">
 	<div class="container">
 		<div class="ilbs-breadcrumb">
 			<a href="<?php echo esc_url(home_url()); ?>">Home</a> &rsaquo; <?php the_title(); ?>
