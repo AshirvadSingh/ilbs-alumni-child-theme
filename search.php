@@ -31,7 +31,7 @@ $search_url     = home_url( '/' );
 <main id="main-content" class="ilbs-search-page">
 
 	<!-- Hero -->
-	<section class="ilbs-search-hero" aria-label="<?php esc_attr_e( 'Search', 'ilbs-alumni' ); ?>">
+	<section class="ilbs-search-hero ilbs-premium-subbanner" aria-label="<?php esc_attr_e( 'Search', 'ilbs-alumni' ); ?>">
 		<div class="ilbs-search-hero__bg" aria-hidden="true">
 			<svg class="ilbs-search-hero__svg ilbs-search-hero__svg--grid" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice">
 				<defs>
