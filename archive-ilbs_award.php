@@ -5,6 +5,7 @@
  * Awards archive intentionally renders only ilbs_award entries.
  * Publications are handled by the publication archive/homepage sections and are not shown here.
  */
+
 get_header();
 
 $taxonomy    = 'ilbs_batch';
@@ -171,8 +172,7 @@ $query = new WP_Query( $args );
 						<?php wp_reset_postdata(); ?>
 					</div>
 				</div>
-
-			</div>
+			</article>
 		</div>
 	</section>
 
