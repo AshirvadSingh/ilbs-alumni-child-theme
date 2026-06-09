@@ -377,6 +377,18 @@
     });
   }
 
+
+  const archiveAwardSearch = document.getElementById('ilbsAwardSearch');
+  if (archiveAwardSearch) {
+    archiveAwardSearch.addEventListener('input', () => {
+      const q = archiveAwardSearch.value.trim().toLowerCase();
+      document.querySelectorAll('[data-awards-archive-grid] [data-award-card]').forEach((card) => {
+        const hay = (card.dataset.search || '').toLowerCase();
+        card.classList.toggle('is-search-hidden', Boolean(q && !hay.includes(q)));
+      });
+    });
+  }
+
   /* ── Swiper: video slider ──────────────────────────────── */
   if (window.Swiper && document.querySelector('.video-swiper')) {
     new Swiper('.video-swiper', {
