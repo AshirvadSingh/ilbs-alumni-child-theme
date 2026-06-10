@@ -539,6 +539,52 @@ function ilbs_render_award_card( $post_id = 0 ) {
 	include get_stylesheet_directory() . '/template-parts/home-award-card.php';
 }
 
+/**
+ * Resolve a display year for awards and publication CPT entries.
+ */
+function ilbs_get_award_item_year( $post_id ) {
+	if ( function_exists( 'get_field' ) ) {
+		foreach ( [ 'award_year', 'publication_year', 'year', 'published_year' ] as $field ) {
+			$value = get_field( $field, $post_id );
+			if ( $value ) {
+				return preg_match( '/(20\d{2}|19\d{2})/', (string) $value, $m ) ? $m[1] : (string) $value;
+			}
+		}
+	}
+	$date = get_the_date( 'Y', $post_id );
+	return $date ?: '';
+}
+
+/**
+ * Whether an archive card should render as a publication experience.
+ */
+function ilbs_is_publication_item( $post_id ) {
+	return 'ilbs_publication' === get_post_type( $post_id ) || ilbs_award_is_publication( $post_id );
+}
+
+/**
+ * Combined award + publication query used by the premium year-filter interfaces.
+ *
+ * @return array<int, WP_Post>
+ */
+function ilbs_get_award_publication_items( $limit = -1 ) {
+	$query = new WP_Query( [
+		'post_type'      => [ 'ilbs_award', 'ilbs_publication' ],
+		'posts_per_page' => $limit,
+		'post_status'    => 'publish',
+		'orderby'        => 'date',
+		'order'          => 'DESC',
+	] );
+	$items = $query->posts;
+	wp_reset_postdata();
+
+	usort( $items, function ( $a, $b ) {
+		return (int) ilbs_get_award_item_year( $b->ID ) <=> (int) ilbs_get_award_item_year( $a->ID );
+	} );
+
+	return $items;
+}
+
 /* ==========================================================
    11. HELPERS — VIDEO PAGE, AWARDS, CONTENT
    ========================================================== */
@@ -686,18 +732,16 @@ function ilbs_get_videos_from_page( $page_id = 0 ) {
  * Distinct award years from ACF meta.
  */
 function ilbs_get_award_years() {
-	global $wpdb;
-	$years = $wpdb->get_col(
-		"SELECT DISTINCT pm.meta_value
-		FROM {$wpdb->postmeta} pm
-		INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
-		WHERE pm.meta_key = 'award_year'
-		AND p.post_type = 'ilbs_award'
-		AND p.post_status = 'publish'
-		AND pm.meta_value != ''
-		ORDER BY CAST(pm.meta_value AS UNSIGNED) DESC"
-	);
-	return array_values( array_filter( array_map( 'strval', $years ?: [] ) ) );
+	$years = [];
+	foreach ( ilbs_get_award_publication_items() as $item ) {
+		$year = ilbs_get_award_item_year( $item->ID );
+		if ( $year ) {
+			$years[] = (string) $year;
+		}
+	}
+	$years = array_values( array_unique( array_filter( $years ) ) );
+	rsort( $years, SORT_NUMERIC );
+	return $years;
 }
 
 /**
@@ -752,7 +796,7 @@ function ilbs_get_award_department( $post_id ) {
 	if ( ! function_exists( 'get_field' ) ) {
 		return '';
 	}
-	$dept = get_field( 'department', $post_id );
+	$dept = get_field( 'department_name', $post_id ) ?: get_field( 'department', $post_id );
 	if ( $dept ) {
 		return (string) $dept;
 	}
@@ -779,4 +823,27 @@ function ilbs_flush_rewrites() {
 add_action( 'init', 'ilbs_disable_parent_header_footer' );
 function ilbs_disable_parent_header_footer() {
 	remove_action( 'twentytwentyone_header', 'twentytwentyone_header_markup' );
+}
+
+/**
+ * Disable standalone award detail pages; the archive is the primary experience.
+ */
+add_action( 'template_redirect', 'ilbs_redirect_single_awards_to_archive' );
+function ilbs_redirect_single_awards_to_archive() {
+	if ( ! is_singular( 'ilbs_award' ) ) {
+		return;
+	}
+
+	$archive_url = get_post_type_archive_link( 'ilbs_award' );
+	if ( ! $archive_url ) {
+		$archive_url = home_url( '/' );
+	}
+
+	$year = ilbs_get_award_item_year( get_queried_object_id() );
+	if ( $year ) {
+		$archive_url = add_query_arg( 'award_year', $year, $archive_url );
+	}
+
+	wp_safe_redirect( $archive_url, 301 );
+	exit;
 }

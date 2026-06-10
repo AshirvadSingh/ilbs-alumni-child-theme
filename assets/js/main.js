@@ -189,6 +189,35 @@
       });
     });
 
+
+    /* Premium alternating timeline reveal */
+    const timeline = document.querySelector('.timeline-section .timeline-list');
+    if (timeline) {
+      gsap.utils.toArray('.timeline-section .timeline-item').forEach((item, index) => {
+        const card = item.querySelector('.timeline-card');
+        const node = item.querySelector('.timeline-node');
+        if (card) {
+          gsap.from(card, {
+            scrollTrigger: { trigger: item, start: 'top 82%' },
+            opacity: 0,
+            x: window.innerWidth > 991 ? (index % 2 === 0 ? -54 : 54) : 24,
+            y: 18,
+            duration: 0.85,
+            ease: 'power3.out',
+          });
+        }
+        if (node) {
+          gsap.from(node, {
+            scrollTrigger: { trigger: item, start: 'top 84%' },
+            opacity: 0,
+            scale: 0.72,
+            duration: 0.65,
+            ease: 'back.out(1.4)',
+          });
+        }
+      });
+    }
+
     /* Awards year pills */
     gsap.from('.ilbs-year-pill', {
       scrollTrigger: { trigger: '.ilbs-year-pills', start: 'top 90%' },
@@ -344,6 +373,18 @@
         if (wrap?.classList.contains('is-hidden')) return;
         const hay = (card.dataset.search || '').toLowerCase();
         card.style.display = !q || hay.includes(q) ? '' : 'none';
+      });
+    });
+  }
+
+
+  const archiveAwardSearch = document.getElementById('ilbsAwardSearch');
+  if (archiveAwardSearch) {
+    archiveAwardSearch.addEventListener('input', () => {
+      const q = archiveAwardSearch.value.trim().toLowerCase();
+      document.querySelectorAll('[data-awards-archive-grid] [data-award-card]').forEach((card) => {
+        const hay = (card.dataset.search || '').toLowerCase();
+        card.classList.toggle('is-search-hidden', Boolean(q && !hay.includes(q)));
       });
     });
   }
