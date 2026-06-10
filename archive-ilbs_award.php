@@ -72,6 +72,43 @@ if ( ! empty( $tax_query ) ) {
 }
 
 $query = new WP_Query( $args );
+
+$total_awards_args = [
+	'post_type'      => 'ilbs_award',
+	'posts_per_page' => -1,
+	'post_status'    => 'publish',
+	'fields'         => 'ids',
+];
+if ( ! empty( $publication_term_ids ) ) {
+	$total_awards_args['tax_query'] = [
+		[
+			'taxonomy' => 'ilbs_award_cat',
+			'field'    => 'term_id',
+			'terms'    => $publication_term_ids,
+			'operator' => 'NOT IN',
+		],
+	];
+}
+$total_awards_query = new WP_Query( $total_awards_args );
+$total_awards       = count( $total_awards_query->posts );
+wp_reset_postdata();
+
+$visible_awards = (int) $query->found_posts;
+$batch_count    = ! empty( $terms ) && ! is_wp_error( $terms ) ? count( $terms ) : 0;
+$department_map = [];
+$latest_award   = '';
+foreach ( $query->posts as $award_post ) {
+	$award_id = $award_post->ID;
+	if ( ! $latest_award ) {
+		$latest_award = function_exists( 'get_field' ) ? get_field( 'award_name', $award_id ) : '';
+		$latest_award = $latest_award ?: get_the_title( $award_id );
+	}
+	$department_name = function_exists( 'get_field' ) ? get_field( 'department_name', $award_id ) : '';
+	if ( $department_name ) {
+		$department_map[ sanitize_title( $department_name ) ] = $department_name;
+	}
+}
+$department_count = count( $department_map );
 ?>
 
 <main id="main-content" class="ilbs-awards-archive-page ilbs-awards-batch-page">
@@ -93,6 +130,39 @@ $query = new WP_Query( $args );
 
 	<section class="premium-section ilbs-ref-awards-block ilbs-awards-batch-section">
 		<div class="container premium-container">
+
+			<div class="ilbs-awards-library-panel" data-reveal>
+				<div class="ilbs-awards-library-panel__copy">
+					<span class="section-kicker ilbs-eyebrow"><?php esc_html_e( 'Recognition Library', 'ilbs-alumni' ); ?></span>
+					<h2><?php esc_html_e( 'A curated awards library for every ILBS alumni batch.', 'ilbs-alumni' ); ?></h2>
+					<p><?php esc_html_e( 'Browse batch-wise honours, quickly search recipient names, and review department-wise recognition in a clean institutional archive.', 'ilbs-alumni' ); ?></p>
+				</div>
+				<div class="ilbs-awards-library-panel__metrics" aria-label="<?php esc_attr_e( 'Awards archive summary', 'ilbs-alumni' ); ?>">
+					<div class="ilbs-awards-library-metric">
+						<span><?php echo esc_html( number_format_i18n( $total_awards ) ); ?></span>
+						<small><?php esc_html_e( 'Awards in library', 'ilbs-alumni' ); ?></small>
+					</div>
+					<div class="ilbs-awards-library-metric">
+						<span><?php echo esc_html( number_format_i18n( $visible_awards ) ); ?></span>
+						<small><?php echo $active_batch ? esc_html__( 'In selected batch', 'ilbs-alumni' ) : esc_html__( 'Visible awards', 'ilbs-alumni' ); ?></small>
+					</div>
+					<div class="ilbs-awards-library-metric">
+						<span><?php echo esc_html( number_format_i18n( $batch_count ) ); ?></span>
+						<small><?php esc_html_e( 'Batch shelves', 'ilbs-alumni' ); ?></small>
+					</div>
+					<div class="ilbs-awards-library-metric">
+						<span><?php echo esc_html( number_format_i18n( $department_count ) ); ?></span>
+						<small><?php esc_html_e( 'Departments shown', 'ilbs-alumni' ); ?></small>
+					</div>
+				</div>
+				<?php if ( $latest_award ) : ?>
+					<div class="ilbs-awards-library-panel__featured">
+						<i class="bi bi-stars" aria-hidden="true"></i>
+						<span><?php esc_html_e( 'Latest recognition', 'ilbs-alumni' ); ?></span>
+						<strong><?php echo esc_html( $latest_award ); ?></strong>
+					</div>
+				<?php endif; ?>
+			</div>
 
 			<div class="ilbs-ref-awards-archive ilbs-ref-awards-layout ilbs-awards-batch-layout">
 
@@ -132,13 +202,16 @@ $query = new WP_Query( $args );
 
 					<div class="ilbs-ref-awards-grid ilbs-student-awards-grid" data-awards-archive-grid>
 						<?php if ( $query->have_posts() ) : ?>
+							<?php $award_index = 0; ?>
 							<?php while ( $query->have_posts() ) : $query->the_post();
+								$award_index++;
 								$post_id     = get_the_ID();
 								$award_name  = function_exists( 'get_field' ) ? get_field( 'award_name', $post_id ) : '';
 								$department  = function_exists( 'get_field' ) ? get_field( 'department_name', $post_id ) : '';
+								$award_year  = ilbs_get_award_item_year( $post_id );
 								$batch_terms = get_the_terms( $post_id, $taxonomy );
 								$batch_name  = ( $batch_terms && ! is_wp_error( $batch_terms ) && ! empty( $batch_terms[0] ) ) ? $batch_terms[0]->name : '';
-								$search_data = strtolower( implode( ' ', array_filter( [ get_the_title(), $award_name, $department, $batch_name ] ) ) );
+								$search_data = strtolower( implode( ' ', array_filter( [ get_the_title(), $award_name, $department, $batch_name, $award_year ] ) ) );
 								?>
 
 								<article class="student-award-card glass-card" data-award-card data-search="<?php echo esc_attr( $search_data ); ?>" data-reveal-item>
@@ -160,6 +233,15 @@ $query = new WP_Query( $args );
 										<?php if ( $batch_name ) : ?>
 											<div class="student-batch"><i class="bi bi-mortarboard" aria-hidden="true"></i><?php printf( esc_html__( 'Batch: %s', 'ilbs-alumni' ), esc_html( $batch_name ) ); ?></div>
 										<?php endif; ?>
+
+										<div class="student-award-card__footer">
+											<span><?php printf( esc_html__( 'Library Record %02d', 'ilbs-alumni' ), (int) $award_index ); ?></span>
+											<?php if ( $award_year ) : ?>
+												<strong><?php echo esc_html( $award_year ); ?></strong>
+											<?php else : ?>
+												<strong><?php esc_html_e( 'ILBS', 'ilbs-alumni' ); ?></strong>
+											<?php endif; ?>
+										</div>
 									</div>
 								</article>
 
